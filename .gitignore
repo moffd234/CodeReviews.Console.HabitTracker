@@ -423,3 +423,7 @@ HabitTracker.MartinL-no/habitTracker.MartinL-no/.DS_Store
 /.vs/
 */bin/
 */obj/
+*\.idea\
+*\.vs\
+*\bin\
+*\obj\

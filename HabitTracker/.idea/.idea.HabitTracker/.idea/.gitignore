@@ -434,7 +434,12 @@ HabitTracker.MartinL-no/habitTracker.MartinL-no/.DS_Store
 /HabitTracker.Johay90/HabitTracker/habit_tracker.db
 /.idea/
 
+
 */.idea/
-/.vs
-*/bin
-*/obj
+/.vs/
+*/bin/
+*/obj/
+*\.idea\
+*\.vs\
+*\bin\
+*\obj\
