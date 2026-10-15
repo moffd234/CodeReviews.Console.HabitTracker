@@ -3,5 +3,5 @@
 public class Occurrence(int id, DateTime timeOfOccurrence)
 {
     private int _id = id;
-    private DateTime _timeOfOccurrence = timeOfOccurrence;
+    public DateTime TimeOfOccurrence { get; set; } = timeOfOccurrence;
 }

@@ -1,9 +1,9 @@
 ﻿namespace HabitTracker
 {
-    internal class Habit(string name, List<DateTime> occurrences)
+    public class Habit(string name, List<Occurrence> occurrences)
     {
-        private string _name = name;
-        private List<DateTime> _occurrences = occurrences;
+        public string Name { get; set; } = name;
+        public List<Occurrence> Occurrences { get; set; } = occurrences;
 
         public Habit(string name) : this(name, []) {}
         
