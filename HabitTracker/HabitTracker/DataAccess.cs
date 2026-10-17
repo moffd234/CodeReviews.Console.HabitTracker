@@ -78,7 +78,8 @@ public class DataAccess(string dbName)
             connection.Open();
 
             using var command = new SqliteCommand(rawSql, connection);
-            command.Parameters.AddWithValue("@timeOfOccurrence", occurrence.TimeOfOccurrence);
+            command.Parameters.AddWithValue("@timeOfOccurrence",
+                occurrence.TimeOfOccurrence.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
             command.Parameters.AddWithValue("@habitName", habitName);
             command.ExecuteNonQuery();
         }
@@ -112,7 +113,7 @@ public class DataAccess(string dbName)
                 var habit = new Habit(name);
                 reader.Close();
                 habit.Occurrences = FindOccurrencesByHabitName(name);
-                
+
                 return habit;
             }
         }
@@ -155,5 +156,31 @@ public class DataAccess(string dbName)
         }
 
         return output;
+    }
+
+    public void EditOccurrence(Occurrence occurrence)
+    {
+        const string rawSql = "UPDATE occurrence " +
+                              "SET timeOfOccurrence = @timeOfOccurrence " +
+                              "WHERE id = @id";
+
+        try
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var command = new SqliteCommand(rawSql, connection);
+            command.Parameters.AddWithValue("@timeOfOccurrence",
+                occurrence.TimeOfOccurrence.ToString(
+                    "yyyy-MM-dd HH:mm:ss",
+                    CultureInfo.InvariantCulture));
+            command.Parameters.AddWithValue("@id", occurrence.Id);
+
+            command.ExecuteNonQuery();
+        }
+        catch (SqliteException e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 }
