@@ -5,7 +5,13 @@ namespace HabitTracker;
 public class InteractionConsole
 {
     private readonly IoConsole _console = new IoConsole();
-    private DataAccess _accessor = new DataAccess("HabitTracker.db");
+    private readonly DataAccess _accessor = new DataAccess("HabitTracker.db");
+    private List<Habit> _habits;
+
+    InteractionConsole()
+    {
+        _habits = _accessor.GetAllHabits();
+    }
 
     public void Run()
     {
@@ -37,8 +43,16 @@ public class InteractionConsole
         }
     }
 
-    private void ViewHabit()
+    private Habit SelectHabit()
     {
-        
+        for (int i = 0; i < _habits.Count; i++)
+        {
+            _console.PrintColored($"{i} {_habits[i].Name}");
+        }
+
+        int choice = _console.GetValidIntOption("Enter habit number", 0, _habits.Count - 1);
+        return _habits[choice];
     }
+    
+    
 }
