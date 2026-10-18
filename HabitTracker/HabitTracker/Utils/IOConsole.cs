@@ -41,7 +41,7 @@ public class IoConsole(AnsiColor color)
         return input.ToLower() == "exit";
     }
 
-    private string GetStringInput(string prompt)
+    public string GetStringInput(string prompt)
     {
         PrintColored(prompt);
         string? input = Console.ReadLine();

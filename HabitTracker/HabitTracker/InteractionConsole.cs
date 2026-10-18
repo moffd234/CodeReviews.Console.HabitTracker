@@ -8,7 +8,7 @@ public class InteractionConsole
     private readonly DataAccess _accessor = new DataAccess("HabitTracker.db");
     private List<Habit> _habits;
 
-    InteractionConsole()
+    public InteractionConsole()
     {
         _habits = _accessor.GetAllHabits();
     }
@@ -20,10 +20,10 @@ public class InteractionConsole
                               "Type exit at any time to exit application" +
                               "***********************************************");
         while (true)
-        { 
+        {
             // Note: If user types exit in any input prompt that uses console.GetStringInput
-            //       the application is immediately exited with exit code 0
-            GetStarterInput();   
+            //       the application immediately exits with exit code 0
+            GetStarterInput();
         }
     }
 
@@ -33,9 +33,13 @@ public class InteractionConsole
         string input = _console.GetValidInput("What would you like to do?\n" +
                                               "V - View habits\n" +
                                               "M - Manage Habits\n", validOptions);
+        // Potentially look into using pagination for habits and occurrences
+        Habit habit = SelectHabit();
+
         if (input.Equals(validOptions[0], StringComparison.CurrentCultureIgnoreCase))
         {
-            // Go to habit viewing
+            PrintHabit(habit);
+            _console.GetStringInput("\nEnter any value to return to main menu");
         }
         else if (input.Equals(validOptions[0], StringComparison.CurrentCultureIgnoreCase))
         {
@@ -53,6 +57,16 @@ public class InteractionConsole
         int choice = _console.GetValidIntOption("Enter habit number", 0, _habits.Count - 1);
         return _habits[choice];
     }
-    
-    
+
+    private void PrintHabit(Habit habit)
+    {
+        _console.PrintColored(AnsiColor.Blue, $"{habit.Name}");
+
+        foreach (Occurrence occurrence in habit.Occurrences)
+        {
+            // Print each occurrence in a given habit
+            // Look into pagination
+            _console.PrintColored(AnsiColor.Purple, $"{occurrence.TimeOfOccurrence}");
+        }
+    }
 }

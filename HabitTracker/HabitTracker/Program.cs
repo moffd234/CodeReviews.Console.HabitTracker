@@ -16,7 +16,9 @@
  */
 
 internal static class HabitTracker {
-    public static void Main(string[] args) { 
-        
+    public static void Main(string[] args)
+    {
+        InteractionConsole console = new();
+        console.Run();
     }
 }
