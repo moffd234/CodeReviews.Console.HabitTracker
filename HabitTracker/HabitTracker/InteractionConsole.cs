@@ -36,4 +36,9 @@ public class InteractionConsole
             // Go to managing habits
         }
     }
+
+    private void ViewHabit()
+    {
+        
+    }
 }

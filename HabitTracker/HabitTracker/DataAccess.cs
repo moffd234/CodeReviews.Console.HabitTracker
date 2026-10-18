@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.Data.Sqlite;
+using SQLitePCL;
 
 namespace HabitTracker;
 
@@ -153,6 +154,28 @@ public class DataAccess(string dbName)
         catch (SqliteException e)
         {
             Console.WriteLine(e.Message);
+        }
+
+        return output;
+    }
+
+    public List<Habit> GetAllHabits()
+    {
+        List<Habit> output = [];
+        const string rawSql = "SELECT * FROM Habit";
+
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+
+        using var command = new SqliteCommand(rawSql, connection);
+        using var reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            var name = reader.GetString(reader.GetOrdinal("name"));
+            var habit = new Habit(name);
+            habit.Occurrences = FindOccurrencesByHabitName(habit.Name);
+            output.Add(habit);
         }
 
         return output;
