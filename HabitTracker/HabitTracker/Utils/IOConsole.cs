@@ -158,4 +158,18 @@ public class IoConsole(AnsiColor color)
 
         return input;
     }
+
+    public int GetValidIntOption(string prompt, int start, int end)
+    {
+        int input = GetIntInput(prompt);
+
+
+        while(input < start || input > end)
+        {
+            PrintError("Invalid input. Please enter a valid input");
+            input = GetIntInput(prompt);
+        }
+
+        return input;
+    }
 }
