@@ -10,22 +10,22 @@ public class IoConsole(AnsiColor color)
     {
     }
 
-    public static void PrintColored(AnsiColor color, string message)
+    public void PrintColored(AnsiColor color, string message)
     {
         Console.WriteLine($"{color.GetCode()}{message}{AnsiColor.Auto.GetCode()}");
     }
 
-    private void PrintColored(string message)
+    public void PrintColored(string message)
     {
         Console.WriteLine($"{_color.GetCode()}{message}{AnsiColor.Auto.GetCode()}");
     }
 
-    public static void PrintError(string message)
+    public void PrintError(string message)
     {
         PrintColored(AnsiColor.Red, message);
     }
 
-    public static void PrintSuccess(string message)
+    public void PrintSuccess(string message)
     {
         PrintColored(AnsiColor.Green, message);
     }
@@ -145,7 +145,7 @@ public class IoConsole(AnsiColor color)
         return input;
     }
 
-    private string GetValidInput(string prompt, string[] validOptions)
+    public string GetValidInput(string prompt, string[] validOptions)
     {
         string input = GetStringInput(prompt);
 
