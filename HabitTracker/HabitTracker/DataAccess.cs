@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using Microsoft.Data.Sqlite;
-using SQLitePCL;
 
 namespace HabitTracker;
 
@@ -95,7 +94,7 @@ public class DataAccess(string dbName)
         }
     }
 
-    public Habit? FindHabitByName(string habitName)
+    private Habit? FindHabitByName(string habitName)
     {
         const string rawSql = "SELECT * FROM Habit WHERE name = @name";
 
@@ -126,7 +125,7 @@ public class DataAccess(string dbName)
         return null;
     }
 
-    public List<Occurrence> FindOccurrencesByHabitName(string habitName)
+    private List<Occurrence> FindOccurrencesByHabitName(string habitName)
     {
         const string rawSql = "SELECT id, timeOfOccurrence FROM occurrence " +
                               "WHERE habitName = @habitName " +

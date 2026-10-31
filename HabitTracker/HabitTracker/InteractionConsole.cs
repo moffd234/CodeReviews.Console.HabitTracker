@@ -5,8 +5,8 @@ namespace HabitTracker;
 public class InteractionConsole
 {
     private readonly IoConsole _console = new IoConsole();
-    private readonly DataAccess _accessor = new DataAccess("HabitTracker.db");
-    private List<Habit> _habits;
+    private readonly DataAccess _accessor = new DataAccess("HabitTracker");
+    private readonly List<Habit> _habits;
 
     public InteractionConsole()
     {
