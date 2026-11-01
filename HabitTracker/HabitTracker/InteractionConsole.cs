@@ -37,12 +37,12 @@ public class InteractionConsole
         // Potentially look into using pagination for habits and occurrences
         Habit habit = SelectHabit();
 
-        if (input.Equals(validOptions[0], StringComparison.CurrentCultureIgnoreCase))
+        if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
             PrintHabit(habit);
             _console.GetStringInput("\nEnter any value to return to main menu");
         }
-        else if (input.Equals(validOptions[0], StringComparison.CurrentCultureIgnoreCase))
+        else if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
             ManageHabits();
         }

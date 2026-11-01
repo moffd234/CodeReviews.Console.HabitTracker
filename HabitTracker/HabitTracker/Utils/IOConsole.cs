@@ -146,7 +146,7 @@ public class IoConsole(AnsiColor color)
         string input = GetStringInput(prompt);
 
 
-        while (!validOptions.Contains(input))
+        while (!validOptions.Contains(input, StringComparer.OrdinalIgnoreCase))
         {
             PrintError("Invalid input. Please enter a valid input");
             input = GetStringInput(prompt);
