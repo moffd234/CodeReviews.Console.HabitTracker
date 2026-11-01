@@ -94,7 +94,7 @@ public class DataAccess(string dbName)
         }
     }
 
-    private Habit? FindHabitByName(string habitName)
+    public Habit? FindHabitByName(string habitName)
     {
         const string rawSql = "SELECT * FROM Habit WHERE name = @name";
 
