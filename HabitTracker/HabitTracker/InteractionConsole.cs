@@ -43,7 +43,7 @@ public class InteractionConsole
         }
         else if (input.Equals(validOptions[0], StringComparison.CurrentCultureIgnoreCase))
         {
-            // Go to managing habits
+            // TODO: Go to managing habits
         }
     }
 
@@ -67,6 +67,23 @@ public class InteractionConsole
             // Print each occurrence in a given habit
             // Look into pagination
             _console.PrintColored(AnsiColor.Purple, $"{occurrence.TimeOfOccurrence}");
+        }
+    }
+
+    private void ManageHabits()
+    {
+        string[] validOptions = ["a", "m"];
+        string input = _console.GetValidInput("A - Add Habit\n M - Update existing habit", validOptions);
+
+        if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
+        {
+            string name = _console.GetStringInput("What is the name of the habit");
+            Habit habit = new Habit(name);
+            
+            _accessor.InsertHabit(habit);
+        } else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
+        {
+            // TODO: Update Habit
         }
     }
 }
