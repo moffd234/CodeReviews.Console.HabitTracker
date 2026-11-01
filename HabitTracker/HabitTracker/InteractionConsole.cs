@@ -125,7 +125,10 @@ public class InteractionConsole
         Occurrence occurrence = new Occurrence(GetOccurrenceDate("Enter occurrence time"));
 
         _accessor.InsertOccurrence(habit.Name, occurrence);
-        habit.Occurrences.Add(occurrence);
+        Habit? existingHabit = _habits.FirstOrDefault(
+            h => h.Name.Equals(habit.Name, StringComparison.OrdinalIgnoreCase));
+
+        existingHabit?.Occurrences.Add(occurrence);
     }
 
     private void UpdateOccurrence(Habit habit)
@@ -135,6 +138,7 @@ public class InteractionConsole
         Occurrence occurrence = habit.Occurrences[input];
 
         occurrence.TimeOfOccurrence = GetOccurrenceDate("Enter new occurrence time");
+        _accessor.EditOccurrence(occurrence);
     }
 
     private DateTime GetOccurrenceDate(string prompt)
