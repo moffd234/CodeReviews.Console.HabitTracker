@@ -55,7 +55,7 @@ public class IoConsole(AnsiColor color)
         {
             Environment.Exit(0);
         }
-        
+
         return input;
     }
 
@@ -63,7 +63,7 @@ public class IoConsole(AnsiColor color)
     {
         string input = GetStringInput(prompt);
         double doubleInput;
-        
+
         while (!double.TryParse(input, out doubleInput))
         {
             input = RepromptInput(prompt, $"{input} is not a valid decimal number");
@@ -76,7 +76,7 @@ public class IoConsole(AnsiColor color)
     {
         string input = GetStringInput(prompt);
         float floatInput;
-        
+
         while (!float.TryParse(input, out floatInput))
         {
             input = RepromptInput(prompt, "Number is not a valid float");
@@ -89,7 +89,7 @@ public class IoConsole(AnsiColor color)
     {
         string input = GetStringInput(prompt);
         int intInput;
-        
+
         while (!int.TryParse(input, out intInput))
         {
             input = RepromptInput(prompt, "Number is not an integer");
@@ -116,15 +116,11 @@ public class IoConsole(AnsiColor color)
         string[] acceptedInputs = ["yes", "no", "y", "n"];
         string input = GetValidInput(prompt, acceptedInputs).ToLower();
 
-        if(input == "yes" || input == "y")
-        {
-            return true;
-        }
-
-        return false;
+        return input is "yes" or "y";
     }
 
-    private static int CountDigitsAfterDecimal(float input) {
+    private static int CountDigitsAfterDecimal(float input)
+    {
         string inputAsString = input.ToString(CultureInfo.InvariantCulture);
 
         return !inputAsString.Contains('.') ? 0 : inputAsString.Split(".")[1].Length;
@@ -135,7 +131,7 @@ public class IoConsole(AnsiColor color)
         float input = GetFloatInput(prompt);
         int digitsAfterDecimal = CountDigitsAfterDecimal(input);
 
-        while(digitsAfterDecimal > 2 || input < 0)
+        while (digitsAfterDecimal > 2 || input < 0)
         {
             PrintError("Invalid monetary input");
             input = GetFloatInput("Please try again");
@@ -150,7 +146,7 @@ public class IoConsole(AnsiColor color)
         string input = GetStringInput(prompt);
 
 
-        while(!validOptions.Contains(input))
+        while (!validOptions.Contains(input))
         {
             PrintError("Invalid input. Please enter a valid input");
             input = GetStringInput(prompt);
@@ -164,12 +160,27 @@ public class IoConsole(AnsiColor color)
         int input = GetIntInput(prompt);
 
 
-        while(input < start || input > end)
+        while (input < start || input > end)
         {
             PrintError("Invalid input. Please enter a valid input");
             input = GetIntInput(prompt);
         }
 
         return input;
+    }
+
+    public DateTime GetValidDateTime(string prompt)
+    {
+        string input = GetStringInput(prompt);
+        const string format = "HH-mm MM-dd-yyyy";
+        DateTime result;
+
+        while (!DateTime.TryParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                   out result))
+        {
+            input = RepromptInput(prompt, "Input is not a valid datetime following HH-mm MM-dd-yyyy");
+        }
+
+        return result;
     }
 }
