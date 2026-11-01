@@ -34,15 +34,15 @@ public class InteractionConsole
         string input = _console.GetValidInput("What would you like to do?\n" +
                                               "V - View habits\n" +
                                               "M - Manage Habits\n", validOptions);
-        // Potentially look into using pagination for habits and occurrences
-        Habit habit = SelectHabit();
 
         if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
+            // Potentially look into using pagination for habits and occurrences
+            Habit habit = SelectHabit();
             PrintHabit(habit);
             _console.GetStringInput("\nEnter any value to return to main menu");
         }
-        else if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
+        else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
         {
             ManageHabits();
         }
@@ -74,16 +74,17 @@ public class InteractionConsole
     private void ManageHabits()
     {
         string[] validOptions = ["a", "m"];
-        string input = _console.GetValidInput("A - Add Habit\n M - Update existing habit", validOptions);
+        string input = _console.GetValidInput("A - Add Habit\nM - Update existing habit", validOptions);
 
         if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
             string name = _console.GetStringInput("What is the name of the habit");
-            Habit habit = new Habit(name);
-            
+            Habit habit = new Habit(name.ToLower());
+
             _accessor.InsertHabit(habit);
             _habits.Add(habit);
-        } else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
+        }
+        else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
         {
             UpdateHabit();
         }
@@ -91,9 +92,8 @@ public class InteractionConsole
 
     private void UpdateHabit()
     {
-        
         string habitToUpdate = _console.GetStringInput("What is the name of the habit");
-        Habit? habit = _accessor.FindHabitByName(habitToUpdate);
+        Habit? habit = _accessor.FindHabitByName(habitToUpdate.ToLower());
 
         while (habit == null)
         {
@@ -109,11 +109,12 @@ public class InteractionConsole
 
         string[] validOptions = ["a", "u"];
         string input = _console.GetValidInput("A - Add Occurrence\n O - Update Occurrence", validOptions);
-        
+
         if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
             AddNewOccurrence(habit);
-        } else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
+        }
+        else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
         {
             UpdateOccurrence(habit);
         }
@@ -122,7 +123,7 @@ public class InteractionConsole
     private void AddNewOccurrence(Habit habit)
     {
         Occurrence occurrence = new Occurrence(GetOccurrenceDate("Enter occurrence time"));
-        
+
         _accessor.InsertOccurrence(habit.Name, occurrence);
         habit.Occurrences.Add(occurrence);
     }
@@ -139,7 +140,7 @@ public class InteractionConsole
     private DateTime GetOccurrenceDate(string prompt)
     {
         _console.PrintColored(prompt);
-        bool useCurrentTime = _console.GetBooleanInput("Would you like to use current time?");
+        bool useCurrentTime = _console.GetYesNoInput("Would you like to use current time?");
         return useCurrentTime ? DateTime.Now : _console.GetValidDateTime("Enter a date (HH-mm MM-dd-yyyy)");
     }
 }
