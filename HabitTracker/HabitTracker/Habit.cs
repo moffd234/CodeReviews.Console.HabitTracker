@@ -8,6 +8,11 @@
 
         public Habit(string name, String unit) : this(name, unit, []) {}
         
+        public int GetTotalQuantity()
+        {
+            return Occurrences.Sum(occurrence => occurrence.Quantity);
+        }
+        
         
     }
 }

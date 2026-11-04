@@ -4,9 +4,8 @@ namespace HabitTracker;
 
 /*
  * TODO:
- * Custom units:
- * Prompt num quantity when entering new occurrence
- * Prompt name of units when creating new habit
+ * Print Quantity
+ * Fix being unable to go back from view habits if no habits
  */
 
 public class InteractionConsole
@@ -68,13 +67,14 @@ public class InteractionConsole
 
     private void PrintHabit(Habit habit)
     {
-        _console.PrintColored(AnsiColor.Blue, $"{habit.Name}");
+        _console.PrintColored(AnsiColor.Blue, $"{habit.Name}: {habit.GetTotalQuantity()} {habit.Unit}");
 
         for (int i = 0; i < habit.Occurrences.Count; i++)
         {
             // Print each occurrence in a given habit
             // Look into pagination
-            _console.PrintColored(AnsiColor.Purple, $"{i} {habit.Occurrences[i].TimeOfOccurrence}");
+            Occurrence occurrence = habit.Occurrences[i];
+            _console.PrintColored(AnsiColor.Purple, $"{i} {occurrence.TimeOfOccurrence} {occurrence.Quantity}");
         }
     }
 
@@ -135,8 +135,8 @@ public class InteractionConsole
         Occurrence occurrence = new Occurrence(time, quantity);
 
         _accessor.InsertOccurrence(habit.Name, occurrence);
-        Habit? existingHabit = _habits.FirstOrDefault(
-            h => h.Name.Equals(habit.Name, StringComparison.OrdinalIgnoreCase));
+        Habit? existingHabit =
+            _habits.FirstOrDefault(h => h.Name.Equals(habit.Name, StringComparison.OrdinalIgnoreCase));
 
         existingHabit?.Occurrences.Add(occurrence);
     }

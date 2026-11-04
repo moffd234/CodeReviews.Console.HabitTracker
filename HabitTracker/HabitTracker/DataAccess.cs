@@ -56,8 +56,8 @@ public class DataAccess(string dbName)
 
     public void InsertHabit(Habit habit)
     {
-        const string rawSql = "INSERT INTO Habit (name) " +
-                              "VALUES (@name)";
+        const string rawSql = "INSERT INTO Habit (name, unit) " +
+                              "VALUES (@name, @unit)";
 
         try
         {
@@ -66,6 +66,7 @@ public class DataAccess(string dbName)
 
             using var command = new SqliteCommand(rawSql, connection);
             command.Parameters.AddWithValue("@name", habit.Name);
+            command.Parameters.AddWithValue("@unit", habit.Unit);
             command.ExecuteNonQuery();
         }
         catch (SqliteException e) when (e.SqliteErrorCode == 19)
@@ -81,8 +82,8 @@ public class DataAccess(string dbName)
 
     public void InsertOccurrence(string habitName, Occurrence occurrence)
     {
-        const string rawSql = "INSERT INTO occurrence (timeOfOccurrence, habitName) " +
-                              "VALUES (@timeOfOccurrence, @habitName)";
+        const string rawSql = "INSERT INTO occurrence (timeOfOccurrence, quantity, habitName) " +
+                              "VALUES (@timeOfOccurrence, @quantity, @habitName)";
 
         try
         {
@@ -97,6 +98,7 @@ public class DataAccess(string dbName)
             using var command = new SqliteCommand(rawSql, connection);
             command.Parameters.AddWithValue("@timeOfOccurrence",
                 occurrence.TimeOfOccurrence.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
+            command.Parameters.AddWithValue("@quantity", occurrence.Quantity);
             command.Parameters.AddWithValue("@habitName", habitName);
             command.ExecuteNonQuery();
         }
@@ -145,7 +147,7 @@ public class DataAccess(string dbName)
 
     private List<Occurrence> FindOccurrencesByHabitName(string habitName)
     {
-        const string rawSql = "SELECT id, timeOfOccurrence FROM occurrence " +
+        const string rawSql = "SELECT id, timeOfOccurrence, quantity FROM occurrence " +
                               "WHERE habitName = @habitName " +
                               "ORDER BY timeOfOccurrence";
         List<Occurrence> output = [];
@@ -166,7 +168,7 @@ public class DataAccess(string dbName)
                 var quantity = reader.GetInt32(reader.GetOrdinal("quantity"));
                 var storedTime = reader.GetString(reader.GetOrdinal("timeOfOccurrence"));
                 var timeOfOccurrence = DateTime.Parse(storedTime, CultureInfo.InvariantCulture);
-                
+
                 output.Add(new Occurrence(id, quantity, timeOfOccurrence));
             }
         }
