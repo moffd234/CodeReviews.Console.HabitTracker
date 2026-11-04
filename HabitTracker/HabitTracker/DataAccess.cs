@@ -110,7 +110,8 @@ public class DataAccess(string dbName)
             if (reader.Read())
             {
                 var name = reader.GetString(reader.GetOrdinal("name"));
-                var habit = new Habit(name);
+                var unit = reader.GetString(reader.GetOrdinal("unit"));
+                var habit = new Habit(name, unit);
                 reader.Close();
                 habit.Occurrences = FindOccurrencesByHabitName(name);
 
@@ -145,9 +146,11 @@ public class DataAccess(string dbName)
             while (reader.Read())
             {
                 var id = reader.GetInt32(reader.GetOrdinal("id"));
+                var quantity = reader.GetInt32(reader.GetOrdinal("quantity"));
                 var storedTime = reader.GetString(reader.GetOrdinal("timeOfOccurrence"));
                 var timeOfOccurrence = DateTime.Parse(storedTime, CultureInfo.InvariantCulture);
-                output.Add(new Occurrence(id, timeOfOccurrence));
+                
+                output.Add(new Occurrence(id, quantity, timeOfOccurrence));
             }
         }
         catch (SqliteException e)
@@ -172,7 +175,8 @@ public class DataAccess(string dbName)
         while (reader.Read())
         {
             var name = reader.GetString(reader.GetOrdinal("name"));
-            var habit = new Habit(name);
+            var unit = reader.GetString(reader.GetOrdinal("unit"));
+            var habit = new Habit(name, unit);
             habit.Occurrences = FindOccurrencesByHabitName(habit.Name);
             output.Add(habit);
         }
