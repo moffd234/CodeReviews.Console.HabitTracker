@@ -2,6 +2,13 @@ using CSharpCasino.Utils;
 
 namespace HabitTracker;
 
+/*
+ * TODO:
+ * Custom units:
+ * Prompt num quantity when entering new occurrence
+ * Prompt name of units when creating new habit
+ */
+
 public class InteractionConsole
 {
     private readonly IoConsole _console = new IoConsole();
@@ -79,7 +86,8 @@ public class InteractionConsole
         if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
             string name = _console.GetStringInput("What is the name of the habit");
-            Habit habit = new Habit(name.ToLower());
+            string units = _console.GetStringInput("What unit of measurement do you want to use");
+            Habit habit = new Habit(name.ToLower(), units.ToLower());
 
             _accessor.InsertHabit(habit);
             _habits.Add(habit);
@@ -122,7 +130,9 @@ public class InteractionConsole
 
     private void AddNewOccurrence(Habit habit)
     {
-        Occurrence occurrence = new Occurrence(GetOccurrenceDate("Enter occurrence time"));
+        DateTime time = GetOccurrenceDate("Enter occurrence time");
+        int quantity = _console.GetIntInput($"Enter num of {habit.Unit}");
+        Occurrence occurrence = new Occurrence(time, quantity);
 
         _accessor.InsertOccurrence(habit.Name, occurrence);
         Habit? existingHabit = _habits.FirstOrDefault(
