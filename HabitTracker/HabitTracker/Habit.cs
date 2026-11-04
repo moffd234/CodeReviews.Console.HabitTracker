@@ -1,11 +1,12 @@
 ﻿namespace HabitTracker
 {
-    public class Habit(string name, List<Occurrence> occurrences)
+    public class Habit(string name, string unit, List<Occurrence> occurrences)
     {
         public string Name { get; set; } = name;
+        public string Unit { get; set; } = unit;
         public List<Occurrence> Occurrences { get; set; } = occurrences;
 
-        public Habit(string name) : this(name, []) {}
+        public Habit(string name, String unit) : this(name, unit, []) {}
         
         
     }
