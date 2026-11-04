@@ -12,13 +12,16 @@ public class DataAccess(string dbName)
     public void CreateTable()
     {
         const string rawSql = "CREATE TABLE IF NOT EXISTS Habit (" +
-                              "name TEXT PRIMARY KEY" +
+                              " name TEXT PRIMARY KEY," +
+                              " unit TEXT NOT NULL" +
                               ");" +
                               "CREATE TABLE IF NOT EXISTS occurrence (" +
-                              "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                              "timeOfOccurrence TEXT NOT NULL," +
-                              "habitName TEXT NOT NULL," +
-                              "FOREIGN KEY (habitName) REFERENCES Habit(name) ON DELETE CASCADE);";
+                              "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                              "timeOfOccurrence TEXT NOT NULL, " +
+                              "quantity INTEGER NOT NULL, " +
+                              "habitName TEXT NOT NULL, " +
+                              "FOREIGN KEY (habitName) REFERENCES Habit(name) ON DELETE CASCADE" +
+                              ");";
 
         try
         {
