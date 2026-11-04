@@ -9,6 +9,20 @@ public class DataAccess(string dbName)
 {
     private readonly string _connectionString = ConfigurationManager.ConnectionStrings[dbName].ConnectionString;
 
+    private static string BuildConnectionString(string dbName)
+    {
+        string connectionString = ConfigurationManager.ConnectionStrings[dbName].ConnectionString;
+
+        var builder = new SqliteConnectionStringBuilder(connectionString);
+
+        builder.DataSource = Path.Combine(
+            AppContext.BaseDirectory,
+            builder.DataSource
+        );
+
+        return builder.ToString();
+    }
+
     public void CreateTable()
     {
         const string rawSql = "CREATE TABLE IF NOT EXISTS Habit (" +
