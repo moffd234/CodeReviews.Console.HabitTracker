@@ -142,6 +142,13 @@ public class InteractionConsole
     {
         DateTime time = GetOccurrenceDate("Enter occurrence time");
         int quantity = _console.GetIntInput($"Enter num of {habit.Unit}");
+
+        while (quantity <= 0)
+        {
+            _console.PrintError("Only positive non-zero numbers are accepted");
+            quantity = _console.GetIntInput($"Enter num of {habit.Unit}");
+        }
+
         Occurrence occurrence = new Occurrence(time, quantity);
 
         _accessor.InsertOccurrence(habit.Name, occurrence);
