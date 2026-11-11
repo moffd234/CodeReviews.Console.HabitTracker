@@ -244,4 +244,28 @@ public class DataAccess(string dbName)
             Console.WriteLine(e.Message);
         }
     }
+
+    public bool DeleteOccurrence(int id)
+    {
+        const string rawSql = "DELETE FROM occurrence " +
+                              "WHERE id = @id;";
+
+        try
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var command = new SqliteCommand(rawSql, connection);
+            command.Parameters.AddWithValue("@id", id);
+
+            command.ExecuteNonQuery();
+            return true;
+        }
+        catch (SqliteException e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
 }

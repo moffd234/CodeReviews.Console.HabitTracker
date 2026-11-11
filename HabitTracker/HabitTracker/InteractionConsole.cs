@@ -2,16 +2,10 @@ using CSharpCasino.Utils;
 
 namespace HabitTracker;
 
-/*
- * TODO:
- * Print Quantity
- * Fix being unable to go back from view habits if no habits
- */
-
 public class InteractionConsole
 {
-    private readonly IoConsole _console = new IoConsole();
-    private readonly DataAccess _accessor = new DataAccess("HabitTracker");
+    private readonly IoConsole _console = new();
+    private readonly DataAccess _accessor = new("HabitTracker");
     private readonly List<Habit> _habits;
 
     public InteractionConsole()
