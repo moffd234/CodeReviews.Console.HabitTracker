@@ -151,7 +151,8 @@ public class InteractionConsole
 
         Occurrence occurrence = new Occurrence(time, quantity);
 
-        _accessor.InsertOccurrence(habit.Name, occurrence);
+        if (!_accessor.InsertOccurrence(habit.Name, occurrence)) return;
+        
         Habit? existingHabit =
             _habits.FirstOrDefault(h => h.Name.Equals(habit.Name, StringComparison.OrdinalIgnoreCase));
 

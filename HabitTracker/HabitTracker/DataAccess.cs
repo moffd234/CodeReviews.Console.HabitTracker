@@ -83,7 +83,7 @@ public class DataAccess(string dbName)
         return false;
     }
 
-    public void InsertOccurrence(string habitName, Occurrence occurrence)
+    public bool InsertOccurrence(string habitName, Occurrence occurrence)
     {
         const string rawSql = "INSERT INTO occurrence (timeOfOccurrence, quantity, habitName) " +
                               "VALUES (@timeOfOccurrence, @quantity, @habitName)";
@@ -104,6 +104,8 @@ public class DataAccess(string dbName)
             command.Parameters.AddWithValue("@quantity", occurrence.Quantity);
             command.Parameters.AddWithValue("@habitName", habitName);
             command.ExecuteNonQuery();
+
+            return true;
         }
         catch (SqliteException e)
         {
@@ -114,6 +116,8 @@ public class DataAccess(string dbName)
         {
             Console.WriteLine(e.Message);
         }
+
+        return false;
     }
 
     public Habit? FindHabitByName(string habitName)
