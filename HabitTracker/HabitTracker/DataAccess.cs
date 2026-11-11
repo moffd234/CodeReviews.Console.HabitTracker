@@ -206,7 +206,8 @@ public class DataAccess(string dbName)
     public void EditOccurrence(Occurrence occurrence)
     {
         const string rawSql = "UPDATE occurrence " +
-                              "SET timeOfOccurrence = @timeOfOccurrence " +
+                              "SET timeOfOccurrence = @timeOfOccurrence, " +
+                              "quantity = @quantity " +
                               "WHERE id = @id";
 
         try
