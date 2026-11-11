@@ -258,8 +258,8 @@ public class DataAccess(string dbName)
             using var command = new SqliteCommand(rawSql, connection);
             command.Parameters.AddWithValue("@id", id);
 
-            command.ExecuteNonQuery();
-            return true;
+            int rowsAffected = command.ExecuteNonQuery();
+            return rowsAffected > 0;
         }
         catch (SqliteException e)
         {
@@ -282,8 +282,8 @@ public class DataAccess(string dbName)
             using var command = new SqliteCommand(rawSql, connection);
             command.Parameters.AddWithValue("@name", name);
 
-            command.ExecuteNonQuery();
-            return true;
+            int rowsAffected = command.ExecuteNonQuery();
+            return rowsAffected > 0;
         }
         catch (SqliteException e)
         {
