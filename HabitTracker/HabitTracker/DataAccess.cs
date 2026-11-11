@@ -223,6 +223,7 @@ public class DataAccess(string dbName)
                 occurrence.TimeOfOccurrence.ToString(
                     "yyyy-MM-dd HH:mm:ss",
                     CultureInfo.InvariantCulture));
+            command.Parameters.AddWithValue("@quantity", occurrence.Quantity);
             command.Parameters.AddWithValue("@id", occurrence.Id);
 
             command.ExecuteNonQuery();
