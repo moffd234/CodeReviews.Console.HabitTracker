@@ -192,19 +192,26 @@ public class DataAccess(string dbName)
         List<Habit> output = [];
         const string rawSql = "SELECT * FROM Habit";
 
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
-
-        using var command = new SqliteCommand(rawSql, connection);
-        using var reader = command.ExecuteReader();
-
-        while (reader.Read())
+        try
         {
-            var name = reader.GetString(reader.GetOrdinal("name"));
-            var unit = reader.GetString(reader.GetOrdinal("unit"));
-            var habit = new Habit(name, unit);
-            habit.Occurrences = FindOccurrencesByHabitName(habit.Name);
-            output.Add(habit);
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var command = new SqliteCommand(rawSql, connection);
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var name = reader.GetString(reader.GetOrdinal("name"));
+                var unit = reader.GetString(reader.GetOrdinal("unit"));
+                var habit = new Habit(name, unit);
+                habit.Occurrences = FindOccurrencesByHabitName(habit.Name);
+                output.Add(habit);
+            }
+        }
+        catch (SqliteException e)
+        {
+            Console.WriteLine(e);
         }
 
         return output;
