@@ -89,7 +89,7 @@ public class InteractionConsole
     private void ManageHabits()
     {
         string[] validOptions = ["a", "m"];
-        string input = _console.GetValidInput("A - Add Habit\nM - Update existing habit", validOptions);
+        string input = _console.GetValidInput("A - Add Habit\nU - Update existing habit", validOptions);
 
         if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
@@ -126,7 +126,7 @@ public class InteractionConsole
         }
 
         string[] validOptions = ["a", "u"];
-        string input = _console.GetValidInput("A - Add Occurrence\n O - Update Occurrence", validOptions);
+        string input = _console.GetValidInput("A - Add Occurrence\n U - Update Occurrence", validOptions);
 
         if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
