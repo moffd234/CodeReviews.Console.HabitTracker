@@ -53,7 +53,7 @@ public class InteractionConsole
                 Habit habit = SelectHabit();
                 PrintHabit(habit);
             }
-            
+
             _console.GetStringInput("\nEnter any value to return to main menu");
         }
         else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
@@ -161,11 +161,20 @@ public class InteractionConsole
     private void UpdateOccurrence(Habit habit)
     {
         PrintHabit(habit);
-        int input = _console.GetIntInput("Enter the number of the occurrence you would like to update");
-        Occurrence occurrence = habit.Occurrences[input];
 
-        occurrence.TimeOfOccurrence = GetOccurrenceDate("Enter new occurrence time");
-        _accessor.EditOccurrence(occurrence);
+        if (habit.Occurrences.Count <= 0)
+        {
+            _console.PrintError("No occurrences to update for this habit");
+        }
+        else
+        {
+            int input = _console.GetValidIntOption("Enter the number of the occurrence you would like to update",
+                0, habit.Occurrences.Count - 1);
+            Occurrence occurrence = habit.Occurrences[input];
+
+            occurrence.TimeOfOccurrence = GetOccurrenceDate("Enter new occurrence time");
+            _accessor.EditOccurrence(occurrence);
+        }
     }
 
     private DateTime GetOccurrenceDate(string prompt)
