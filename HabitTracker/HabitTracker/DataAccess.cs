@@ -54,7 +54,7 @@ public class DataAccess(string dbName)
         }
     }
 
-    public void InsertHabit(Habit habit)
+    public bool InsertHabit(Habit habit)
     {
         const string rawSql = "INSERT INTO Habit (name, unit) " +
                               "VALUES (@name, @unit)";
@@ -68,6 +68,7 @@ public class DataAccess(string dbName)
             command.Parameters.AddWithValue("@name", habit.Name);
             command.Parameters.AddWithValue("@unit", habit.Unit);
             command.ExecuteNonQuery();
+            return true;
         }
         catch (SqliteException e) when (e.SqliteErrorCode == 19)
         {
@@ -78,6 +79,8 @@ public class DataAccess(string dbName)
             Console.WriteLine("Issue adding habit. See below");
             Console.WriteLine(e.Message);
         }
+
+        return false;
     }
 
     public void InsertOccurrence(string habitName, Occurrence occurrence)

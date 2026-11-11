@@ -89,8 +89,10 @@ public class InteractionConsole
             string units = _console.GetStringInput("What unit of measurement do you want to use");
             Habit habit = new Habit(name.ToLower(), units.ToLower());
 
-            _accessor.InsertHabit(habit);
-            _habits.Add(habit);
+            if (_accessor.InsertHabit(habit))
+            {
+                _habits.Add(habit);
+            }
         }
         else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
         {
