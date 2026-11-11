@@ -43,9 +43,17 @@ public class InteractionConsole
 
         if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
-            // Potentially look into using pagination for habits and occurrences
-            Habit habit = SelectHabit();
-            PrintHabit(habit);
+            if (_habits.Count == 0)
+            {
+                _console.PrintError("No habits to print");
+            }
+            else
+            {
+                // Potentially look into using pagination for habits and occurrences
+                Habit habit = SelectHabit();
+                PrintHabit(habit);
+            }
+            
             _console.GetStringInput("\nEnter any value to return to main menu");
         }
         else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
