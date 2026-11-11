@@ -268,4 +268,28 @@ public class DataAccess(string dbName)
 
         return false;
     }
+
+    public bool DeleteHabit(string name)
+    {
+        const string rawSql = "DELETE FROM Habit " +
+                              "WHERE name = @name;";
+
+        try
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var command = new SqliteCommand(rawSql, connection);
+            command.Parameters.AddWithValue("@name", name);
+
+            command.ExecuteNonQuery();
+            return true;
+        }
+        catch (SqliteException e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
 }
