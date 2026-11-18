@@ -82,14 +82,14 @@ public class InteractionConsole
 
     private void ManageHabits()
     {
-        string[] validOptions = ["a", "m"];
-        string input = _console.GetValidInput("A - Add Habit\nU - Update existing habit", validOptions);
+        string[] validOptions = ["a", "u", "d"];
+        string input = _console.GetValidInput("A - Add Habit\nU - Update existing habit\nD - Delete habit", validOptions);
 
         if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
             string name = _console.GetStringInput("What is the name of the habit");
             string units = _console.GetStringInput("What unit of measurement do you want to use");
-            Habit habit = new Habit(name.ToLower(), units.ToLower());
+            Habit habit = new(name.ToLower(), units.ToLower());
 
             if (_accessor.InsertHabit(habit))
             {
@@ -100,27 +100,23 @@ public class InteractionConsole
         {
             UpdateHabit();
         }
+        else if (input.Equals(validOptions[2], StringComparison.OrdinalIgnoreCase))
+        {
+            DeleteHabit();
+        }
     }
 
     private void UpdateHabit()
     {
-        string habitToUpdate = _console.GetStringInput("What is the name of the habit");
-        Habit? habit = _accessor.FindHabitByName(habitToUpdate.ToLower());
+        Habit? habit = GetHabit();
 
-        while (habit == null)
+        if (habit == null)
         {
-            if (habitToUpdate.Equals("back", StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-
-            _console.PrintError("Habit not found by that name. Try Again or type back");
-            habitToUpdate = _console.GetStringInput("What is the name of the habit");
-            habit = _accessor.FindHabitByName(habitToUpdate);
+            return;
         }
 
-        string[] validOptions = ["a", "u"];
-        string input = _console.GetValidInput("A - Add Occurrence\n U - Update Occurrence", validOptions);
+        string[] validOptions = ["a", "u", "d"];
+        string input = _console.GetValidInput("A - Add Occurrence\n U - Update Occurrence\n D - Delete Occurrence", validOptions);
 
         if (input.Equals(validOptions[0], StringComparison.OrdinalIgnoreCase))
         {
@@ -129,7 +125,49 @@ public class InteractionConsole
         else if (input.Equals(validOptions[1], StringComparison.OrdinalIgnoreCase))
         {
             UpdateOccurrence(habit);
+        } else if (input.Equals(validOptions[2], StringComparison.OrdinalIgnoreCase))
+        {
+            DeleteOccurrence(habit);
         }
+    }
+
+    private void DeleteHabit()
+    {
+        Habit? habit = GetHabit();
+
+        if(habit == null)
+        {
+            return;
+        }
+
+        if(_accessor.DeleteHabit(habit.Name))
+        {
+            _habits.RemoveAll(h => h.Name.Equals(habit.Name, StringComparison.OrdinalIgnoreCase));
+        }
+        else
+        {
+            _console.PrintError("Error deleting habit. Try again later");
+        }
+    }
+
+    private Habit? GetHabit()
+    {
+        string habitToUpdate = _console.GetStringInput("What is the name of the habit");
+        Habit? habit = _accessor.FindHabitByName(habitToUpdate.ToLower());
+
+        while (habit == null)
+        {
+            if (habitToUpdate.Equals("back", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            _console.PrintError("Habit not found by that name. Try Again or type back");
+            habitToUpdate = _console.GetStringInput("What is the name of the habit");
+            habit = _accessor.FindHabitByName(habitToUpdate);
+        }
+        
+        return habit;
     }
 
     private void AddNewOccurrence(Habit habit)
@@ -156,20 +194,50 @@ public class InteractionConsole
     private void UpdateOccurrence(Habit habit)
     {
         PrintHabit(habit);
+        Occurrence? occurrence = GetOccurrence(habit);
+
+        if (occurrence == null)
+        {
+            return;
+        }
+        
+        occurrence.TimeOfOccurrence = GetOccurrenceDate("Enter new occurrence time");
+        _accessor.EditOccurrence(occurrence);
+
+    }
+
+    private void DeleteOccurrence(Habit habit) {
+        PrintHabit(habit);
+        Occurrence? occurrence = GetOccurrence(habit);
+
+        if (occurrence == null)
+        {
+            return;
+        }
+
+        if(_accessor.DeleteOccurrence(occurrence.Id)){
+
+            habit.Occurrences.Remove(occurrence);
+            Habit? existingHabit = _habits.FirstOrDefault(h => h.Name.Equals(habit.Name, StringComparison.OrdinalIgnoreCase));
+            existingHabit?.Occurrences.Remove(occurrence);
+        }
+        else
+        {
+            _console.PrintError("Error deleting occurrence. Try again later");
+        }
+    }
+
+    private Occurrence? GetOccurrence(Habit habit) {
 
         if (habit.Occurrences.Count <= 0)
         {
             _console.PrintError("No occurrences to update for this habit");
+            return null;
         }
-        else
-        {
-            int input = _console.GetValidIntOption("Enter the number of the occurrence you would like to update",
-                0, habit.Occurrences.Count - 1);
-            Occurrence occurrence = habit.Occurrences[input];
 
-            occurrence.TimeOfOccurrence = GetOccurrenceDate("Enter new occurrence time");
-            _accessor.EditOccurrence(occurrence);
-        }
+        int input = _console.GetValidIntOption("Enter the number of the occurrence you would like to update", 0, habit.Occurrences.Count - 1);
+        return habit.Occurrences[input];
+        
     }
 
     private DateTime GetOccurrenceDate(string prompt)
@@ -178,4 +246,6 @@ public class InteractionConsole
         bool useCurrentTime = _console.GetYesNoInput("Would you like to use current time?");
         return useCurrentTime ? DateTime.Now : _console.GetValidDateTime("Enter a date (HH-mm MM-dd-yyyy)");
     }
+
+    
 }
